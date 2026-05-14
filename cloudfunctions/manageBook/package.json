@@ -1,0 +1,1 @@
+{ "name": "manageBook", "version": "1.0.0", "description": "账本管理云函数", "dependencies": { "wx-server-sdk": "~2.6.3" } }

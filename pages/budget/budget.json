@@ -1,0 +1,7 @@
+{
+  "navigationBarTitleText": "预算管理",
+  "navigationBarBackgroundColor": "#4F80FF",
+  "navigationBarTextStyle": "white",
+  "backgroundColor": "#F5F6FA",
+  "enablePullDownRefresh": false
+}

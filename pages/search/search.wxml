@@ -1,0 +1,107 @@
+<view class="search-container">
+  <!-- 搜索栏 -->
+  <view class="search-bar">
+    <view class="search-input-wrap">
+      <text class="search-icon">🔍</text>
+      <input class="search-input" value="{{keyword}}" placeholder="搜索备注、分类、金额…"
+        bindinput="onKeywordInput" bindconfirm="doSearch" confirm-type="search" />
+      <view wx:if="{{keyword}}" class="search-clear" bindtap="clearSearch">✕</view>
+    </view>
+    <view class="btn-search" bindtap="doSearch">搜索</view>
+  </view>
+
+  <!-- 类型快速筛选 -->
+  <view class="type-filter">
+    <view class="type-btn {{selectedType === 'all' ? 'active' : ''}}" bindtap="switchType" data-type="all">全部</view>
+    <view class="type-btn {{selectedType === 'expense' ? 'active' : ''}}" bindtap="switchType" data-type="expense">支出</view>
+    <view class="type-btn {{selectedType === 'income' ? 'active' : ''}}" bindtap="switchType" data-type="income">收入</view>
+    <view class="type-btn-advanced {{showAdvanced ? 'advanced-open' : ''}}" bindtap="toggleAdvanced">高级筛选 {{showAdvanced ? '▲' : '▼'}}</view>
+  </view>
+
+  <!-- 高级筛选面板 -->
+  <view wx:if="{{showAdvanced}}" class="advanced-panel card">
+    <view class="adv-row">
+      <text class="adv-label">分类</text>
+      <view class="adv-value" bindtap="selectCategory">
+        <text>{{selectedCatName}}</text>
+        <text class="adv-arrow">›</text>
+      </view>
+    </view>
+    <view class="adv-divider"></view>
+    <view class="adv-row">
+      <text class="adv-label">金额区间</text>
+      <view class="adv-amount-range">
+        <input class="adv-amount-input" type="digit" value="{{minAmount}}" placeholder="最小" bindinput="onMinAmountInput" />
+        <text class="adv-tilde">~</text>
+        <input class="adv-amount-input" type="digit" value="{{maxAmount}}" placeholder="最大" bindinput="onMaxAmountInput" />
+      </view>
+    </view>
+    <view class="adv-divider"></view>
+    <view class="adv-row">
+      <text class="adv-label">开始日期</text>
+      <picker mode="date" value="{{startDate}}" bindchange="onStartDateChange">
+        <view class="adv-value">
+          <text>{{startDate || '不限'}}</text>
+          <text class="adv-arrow">›</text>
+        </view>
+      </picker>
+    </view>
+    <view class="adv-divider"></view>
+    <view class="adv-row">
+      <text class="adv-label">结束日期</text>
+      <picker mode="date" value="{{endDate}}" bindchange="onEndDateChange">
+        <view class="adv-value">
+          <text>{{endDate || '不限'}}</text>
+          <text class="adv-arrow">›</text>
+        </view>
+      </picker>
+    </view>
+    <button class="btn-primary" style="margin-top:24rpx;" bindtap="doSearch">应用筛选</button>
+  </view>
+
+  <!-- loading -->
+  <view wx:if="{{loading}}" class="loading-wrap">
+    <text>搜索中…</text>
+  </view>
+
+  <!-- 搜索结果汇总 -->
+  <view wx:elif="{{searched && !loading}}" class="result-summary">
+    <text class="result-count">找到 {{totalCount}} 条记录</text>
+    <text class="result-total text-muted">{{totalText}}</text>
+  </view>
+
+  <!-- 搜索结果列表 -->
+  <block wx:if="{{results.length > 0}}">
+    <view wx:for="{{results}}" wx:key="_id" class="card bill-item" bindtap="onBillTap" data-id="{{item._id}}">
+      <view class="bill-left">
+        <view class="cat-icon-wrap" style="background: {{item.catColor}}22">
+          <text class="cat-icon">{{item.catIcon}}</text>
+        </view>
+        <view class="bill-info">
+          <text class="bill-cat">{{item.catName}}</text>
+          <text class="bill-note text-muted">{{item.note || item.dateText}}</text>
+          <text class="bill-member text-muted">{{item.nickName || ''}}</text>
+        </view>
+      </view>
+      <view class="bill-right">
+        <text class="bill-amount {{item.type === 'expense' ? 'amount-expense' : 'amount-income'}}">
+          {{item.type === 'expense' ? '-' : '+'}}¥{{item.amountText}}
+        </text>
+        <text class="bill-date text-muted">{{item.dateText}}</text>
+      </view>
+    </view>
+  </block>
+
+  <!-- 无结果 -->
+  <view wx:elif="{{searched && !loading && results.length === 0}}" class="empty-state">
+    <text>没有找到匹配的账单</text>
+    <text class="text-muted" style="font-size:24rpx;margin-top:12rpx;">试试换个关键词或放宽筛选条件</text>
+  </view>
+
+  <!-- 未搜索提示 -->
+  <view wx:elif="{{!searched && !loading}}" class="tip-state">
+    <text class="tip-emoji">🔍</text>
+    <text class="tip-text">输入关键词或选择筛选条件</text>
+    <text class="tip-sub">支持搜索备注、分类名称、金额</text>
+  </view>
+</view>

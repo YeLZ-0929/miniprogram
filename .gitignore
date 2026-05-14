@@ -1,34 +1,14 @@
-# Gradle files
-.gradle/
-build/
+# Windows
+[Dd]esktop.ini
+Thumbs.db
+$RECYCLE.BIN/
 
-# Local configuration file (sdk path, etc)
-local.properties
+# macOS
+.DS_Store
+.fseventsd
+.Spotlight-V100
+.TemporaryItems
+.Trashes
 
-# Log/OS Files
-*.log
-
-# Android Studio generated files and folders
-captures/
-.externalNativeBuild/
-.cxx/
-*.aab
-*.apk
-output-metadata.json
-
-# IntelliJ
-*.iml
-.idea/
-misc.xml
-deploymentTargetDropDown.xml
-render.experimental.xml
-
-# Keystore files
-*.jks
-*.keystore
-
-# Google Services (e.g. APIs or Firebase)
-google-services.json
-
-# Android Profiling
-*.hprof
+# Node.js
+node_modules/

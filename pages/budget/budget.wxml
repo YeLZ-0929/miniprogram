@@ -1,0 +1,105 @@
+<view class="container">
+  <!-- 顶部月份切换 -->
+  <view class="month-bar">
+    <view class="month-arrow" bindtap="prevMonth">‹</view>
+    <view class="month-title">{{year}}年{{month}}月 预算</view>
+    <view class="month-arrow {{year >= nowYear && month >= nowMonth ? 'disabled' : ''}}" bindtap="nextMonth">›</view>
+  </view>
+
+  <!-- 总览卡片 -->
+  <view class="card overview-card">
+    <view class="overview-row">
+      <view class="overview-item">
+        <text class="ov-label">总预算</text>
+        <text class="ov-amount text-primary">¥{{totalBudgetText}}</text>
+      </view>
+      <view class="overview-divider"></view>
+      <view class="overview-item">
+        <text class="ov-label">已支出</text>
+        <text class="ov-amount {{totalActual > totalBudget && totalBudget > 0 ? 'amount-expense' : 'text-success'}}">¥{{totalActualText}}</text>
+      </view>
+      <view class="overview-divider"></view>
+      <view class="overview-item">
+        <text class="ov-label">使用率</text>
+        <text class="ov-amount {{totalPercent >= 100 ? 'amount-expense' : 'text-muted'}}">{{totalPercent}}%</text>
+      </view>
+    </view>
+    <view class="total-bar-wrap">
+      <view class="total-bar-fill {{totalPercent >= 100 ? 'bar-danger' : 'bar-normal'}}" style="width: {{totalPercent}}%"></view>
+    </view>
+  </view>
+
+  <!-- 预算列表 -->
+  <view class="section-header">
+    <text class="section-title">分类预算</text>
+    <view class="btn-add-budget" bindtap="addBudget">+ 添加预算</view>
+  </view>
+
+  <block wx:if="{{budgetList.length > 0}}">
+    <view wx:for="{{budgetList}}" wx:key="id" class="card budget-item">
+      <view class="budget-top">
+        <view class="cat-info">
+          <text class="cat-icon">{{item.icon}}</text>
+          <text class="cat-name">{{item.name}}</text>
+        </view>
+        <view class="budget-actions">
+          <view class="action-edit" bindtap="openEdit" data-id="{{item.id}}">编辑</view>
+          <view class="action-del" bindtap="deleteBudget" data-id="{{item.id}}">删除</view>
+        </view>
+      </view>
+
+      <view class="budget-amounts">
+        <text class="actual-amount {{item.overBudget ? 'amount-expense' : 'text-bold'}}">已用 ¥{{item.actualText}}</text>
+        <text class="budget-amount text-muted"> / {{item.budget > 0 ? '预算 ¥' + item.budgetText : '未设预算'}}</text>
+      </view>
+
+      <!-- 进度条 -->
+      <view wx:if="{{item.budget > 0}}" class="progress-wrap">
+        <view class="progress-fill" style="width: {{item.percent}}%; background: {{item.barColor}}"></view>
+      </view>
+
+      <view wx:if="{{item.overBudget}}" class="over-tip">⚠️ 已超出预算</view>
+    </view>
+  </block>
+
+  <view wx:else class="empty-state">
+    <text>暂未设置预算</text>
+    <text class="text-muted" style="font-size:24rpx;margin-top:12rpx;">点击「添加预算」设置分类上限</text>
+  </view>
+
+  <!-- 分类选择弹窗 -->
+  <view wx:if="{{showCatPicker}}" class="modal-mask" bindtap="closeCatPicker">
+    <view class="modal-box picker-box" catchtap="">
+      <view class="modal-title">选择分类</view>
+      <scroll-view scroll-y class="cat-picker-list">
+        <view
+          wx:for="{{pickerCats}}"
+          wx:key="id"
+          class="cat-picker-item"
+          bindtap="pickCategory"
+          data-id="{{item.id}}"
+        >
+          <text class="cat-picker-icon">{{item.icon}}</text>
+          <text class="cat-picker-name">{{item.name}}</text>
+        </view>
+      </scroll-view>
+      <button class="btn-ghost" style="margin-top:16rpx;" bindtap="closeCatPicker">取消</button>
+    </view>
+  </view>
+
+  <!-- 编辑预算弹窗 -->
+  <view wx:if="{{showEditModal}}" class="modal-mask" bindtap="cancelEdit">
+    <view class="modal-box" catchtap="">
+      <view class="modal-title">设置预算 — {{editingCat.icon}} {{editingCat.name}}</view>
+      <view class="modal-input-wrap">
+        <text class="modal-currency">¥</text>
+        <input class="modal-input" type="digit" value="{{editingAmount}}" placeholder="请输入月度预算金额" bindinput="onEditAmountInput" focus="{{showEditModal}}" />
+      </view>
+      <text class="modal-hint">输入 0 或留空表示删除该预算</text>
+      <view class="modal-btns">
+        <button class="btn-ghost" style="flex:1;margin-right:16rpx;" bindtap="cancelEdit">取消</button>
+        <button class="btn-primary" style="flex:1;" bindtap="saveEdit">保存</button>
+      </view>
+    </view>
+  </view>
+</view>

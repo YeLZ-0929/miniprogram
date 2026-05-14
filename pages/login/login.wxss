@@ -1,0 +1,196 @@
+/* pages/login/login.wxss */
+.container {
+  min-height: 100vh;
+  background: linear-gradient(160deg, #EEF2FF 0%, #F5F6FA 100%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding:0 60rpx;
+}
+
+.hero {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 120rpx;
+  margin-bottom: 60rpx;
+}
+
+.logo-wrap {
+  width: 160rpx;
+  height: 160rpx;
+  background: #4F80FF;
+  border-radius: 40rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 32rpx;
+  box-shadow: 0 16rpx 40rpx rgba(79,128,255,0.3);
+}
+
+.logo-icon {
+  font-size: 80rpx;
+}
+
+.app-name {
+  font-size: 52rpx;
+  font-weight: 600;
+  color: #1A1A2E;
+  margin-bottom: 16rpx;
+}
+
+.app-desc {
+  font-size: 28rpx;
+  color: #888888;
+}
+
+/* 登录区域 */
+.login-section {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24rpx;
+}
+
+/* 头像选择按钮 */
+.avatar-btn {
+  width: 160rpx;
+  height: 160rpx;
+  border-radius: 80rpx;
+  padding:0;
+  margin:0 0 16rpx 0;
+  background: transparent;
+  border: none;
+  line-height: normal;
+  overflow: hidden;
+}
+.avatar-btn::after { border: none; }
+
+.avatar-img {
+  width: 160rpx;
+  height: 160rpx;
+  border-radius: 80rpx;
+}
+
+.avatar-placeholder {
+  width: 160rpx;
+  height: 160rpx;
+  border-radius: 80rpx;
+  background: #E8EAEE;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24rpx;
+  color: #AAAAAA;
+}
+
+/* 表单 */
+.form-group {
+  width: 100%;
+  background: #FFFFFF;
+  border-radius: 16rpx;
+  padding: 24rpx 28rpx;
+}
+
+.form-label {
+  font-size: 26rpx;
+  color: #888888;
+  display: block;
+  margin-bottom: 12rpx;
+}
+
+.form-input {
+  width: 100%;
+  height: 72rpx;
+  font-size: 30rpx;
+  color: #333333;
+}
+
+/* 微信昵称容器 */
+.nickname-wrap {
+  width: 100%;
+}
+
+/* 微信昵称：未获取时（点击触发微信昵称弹窗） */
+.nickname-input {
+  width: 100%;
+  height: 72rpx;
+  line-height: 72rpx;
+  font-size: 30rpx;
+  color: #AAAAAA;
+  background: #F5F6FA;
+  border-radius: 8rpx;
+  padding: 0 16rpx;
+  box-sizing: border-box;
+  caret-color: transparent; /* 隐藏光标，减少可输入感 */
+}
+
+/* 微信昵称：已获取，只读展示（input 已被 wx:if 销毁） */
+.nickname-readonly {
+  width: 100%;
+  height: 72rpx;
+  line-height: 72rpx;
+  font-size: 30rpx;
+  color: #333333;
+  background: #F5F6FA;
+  border-radius: 8rpx;
+  padding: 0 16rpx;
+  box-sizing: border-box;
+}
+
+.form-hint {
+  font-size: 22rpx;
+  color: #BBBBBB;
+  display: block;
+  margin-top: 8rpx;
+}
+
+/* 进入按钮 */
+.btn-enter {
+  width: 100%;
+  height: 96rpx;
+  background: #4F80FF;
+  color: #FFFFFF;
+  border-radius: 48rpx;
+  font-size: 34rpx;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  box-shadow: 0 8rpx 24rpx rgba(79,128,255,0.3);
+  margin-top: 16rpx;
+}
+.btn-enter::after { border: none; }
+.btn-enter[disabled] {
+  background: #B0C4FF;
+  box-shadow: none;
+  color: rgba(255,255,255,0.7);
+}
+
+.tip {
+  font-size: 24rpx;
+  color: #BBBBBB;
+}
+
+/* 底部特性 */
+.features {
+  position: fixed;
+  bottom: 80rpx;
+  left:0;
+  right:0;
+  display: flex;
+  justify-content: center;
+  gap: 60rpx;
+}
+
+.feature-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8rpx;
+}
+
+.feature-icon { font-size: 48rpx; }
+.feature-text { font-size: 24rpx; color: #888888; }

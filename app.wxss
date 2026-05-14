@@ -1,0 +1,107 @@
+/* app.wxss - 全局样式 */
+page {
+  background-color: #F5F6FA;
+  font-family: -apple-system, 'PingFang SC', 'Microsoft YaHei', sans-serif;
+  font-size: 28rpx;
+  color: #333333;
+  box-sizing: border-box;
+}
+
+/* 通用工具类 */
+.flex { display: flex; }
+.flex-col { display: flex; flex-direction: column; }
+.flex-center { display: flex; align-items: center; justify-content: center; }
+.flex-between { display: flex; align-items: center; justify-content: space-between; }
+.flex-1 { flex: 1; }
+
+.text-center { text-align: center; }
+.text-right { text-align: right; }
+.text-muted { color: #999999; }
+.text-primary { color: #4F80FF; }
+.text-danger { color: #FF4D4F; }
+.text-success { color: #52C41A; }
+.text-bold { font-weight: 500; }
+
+/* 卡片 */
+.card {
+  background: #FFFFFF;
+  border-radius: 16rpx;
+  margin: 20rpx 24rpx;
+  padding: 30rpx;
+  box-shadow: 0 2rpx 12rpx rgba(0,0,0,0.06);
+}
+
+/* 按钮 */
+.btn-primary {
+  background: #4F80FF;
+  color: #FFFFFF;
+  border-radius: 44rpx;
+  height: 88rpx;
+  line-height: 88rpx;
+  text-align: center;
+  font-size: 32rpx;
+  font-weight: 500;
+  border: none;
+}
+
+.btn-primary::after { border: none; }
+
+.btn-ghost {
+  background: transparent;
+  color: #4F80FF;
+  border-radius: 44rpx;
+  height: 88rpx;
+  line-height: 88rpx;
+  text-align: center;
+  font-size: 32rpx;
+  font-weight: 500;
+  border: 2rpx solid #4F80FF;
+}
+.btn-ghost::after { border: none; }
+
+/* 金额颜色：支出红，收入绿（中国习惯） */
+.amount-expense { color: #E24B4A; }
+.amount-income { color: #52C41A; }
+
+/* 分割线 */
+.divider {
+  height: 1rpx;
+  background: #F0F0F0;
+  margin: 0 24rpx;
+}
+
+/* 空状态 */
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 120rpx 0;
+  color: #CCCCCC;
+  font-size: 26rpx;
+}
+.empty-state image {
+  width: 200rpx;
+  height: 200rpx;
+  margin-bottom: 20rpx;
+  opacity: 0.4;
+}
+
+/* loading 状态 */
+.loading-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 60rpx 0;
+  color: #BBBBBB;
+  font-size: 26rpx;
+}
+
+/* 标签徽章 */
+.badge {
+  display: inline-block;
+  padding: 4rpx 16rpx;
+  border-radius: 20rpx;
+  font-size: 22rpx;
+  background: #EEF2FF;
+  color: #4F80FF;
+}

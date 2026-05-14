@@ -1,0 +1,130 @@
+/* pages/bill/bill.wxss */
+.page { background: #F5F6FA; min-height: 100vh; padding-bottom: 160rpx; box-sizing: border-box; }
+
+/* 查看模式 */
+.detail-card { margin: 24rpx; background: #FFFFFF; border-radius: 16rpx; overflow: hidden; }
+.amount-area {
+  display: flex; flex-direction: column; align-items: center;
+  padding: 48rpx 32rpx 32rpx; gap: 12rpx;
+}
+.cat-icon-big { font-size: 64rpx; margin-bottom: 8rpx; }
+.cat-name { font-size: 28rpx; color: #888888; }
+.amount {
+  font-size: 72rpx; font-weight: 700; margin-top: 8rpx;
+}
+.amount-expense { color: #E24B4A; }
+.amount-income { color: #52C41A; }
+
+.detail-rows { padding: 0 32rpx; }
+.detail-row {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 28rpx 0; border-bottom: 1rpx solid #F5F5F5;
+}
+.detail-row:last-child { border-bottom: none; }
+.detail-label { font-size: 28rpx; color: #999999; }
+.detail-val { font-size: 28rpx; color: #333333; }
+
+.del-wrap { padding: 0 24rpx 60rpx; }
+.btn-delete {
+  width: 100%; height: 88rpx; background: #FFFFFF;
+  color: #E24B4A; border: 1rpx solid #E24B4A;
+  border-radius: 44rpx; font-size: 30rpx;
+}
+.btn-delete::after { border: none; }
+
+.btn-row { padding: 0 24rpx; margin-top: 24rpx; }
+.btn-edit {
+  width: 100%; height: 88rpx; background: #4F80FF;
+  color: #FFFFFF; border: none;
+  border-radius: 44rpx; font-size: 30rpx;
+}
+.btn-edit::after { border: none; }
+
+/* 编辑模式 */
+.edit-card { background: #FFFFFF; border-radius: 16rpx; margin: 24rpx; padding: 20rpx 28rpx; }
+
+/* 收支切换 */
+.type-switch {
+  display: flex; background: #FFFFFF;
+  border-bottom: 1rpx solid #F0F0F0; border-radius: 16rpx 16rpx 0 0;
+}
+.type-tab {
+  flex: 1; text-align: center; padding: 20rpx 0;
+  font-size: 28rpx; color: #AAAAAA; position: relative;
+}
+.active-expense { color: #E24B4A; font-weight: 500; }
+.active-income { color: #52C41A; font-weight: 500; }
+
+/* 金额输入 */
+.amount-row { display: flex; align-items: center; padding: 16rpx 0 24rpx; height: 100rpx; overflow: hidden; }
+.currency-sign { font-size: 40rpx; font-weight: 500; margin-right: 12rpx; }
+.amount-input { flex: 1; font-size: 56rpx; font-weight: 600; border: none; background: transparent; line-height: 80rpx; height: 80rpx; }
+.text-danger { color: #E24B4A; }
+.text-success { color: #52C41A; }
+
+/* 表单行 */
+.divider { height: 1rpx; background: #F5F5F5; margin: 8rpx 0; }
+.form-row {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 24rpx 0; border-bottom: 1rpx solid #F5F5F5;
+}
+.form-row:last-child { border-bottom: none; }
+.row-label { font-size: 28rpx; color: #666666; }
+.row-value {
+  display: flex; align-items: center; gap: 8rpx;
+  font-size: 28rpx; color: #333333;
+}
+.placeholder { color: #CCCCCC; }
+.arrow { color: #CCCCCC; font-size: 36rpx; }
+
+.note-input {
+  flex: 1; text-align: right; font-size: 28rpx;
+  color: #333333; background: transparent; border: none;
+}
+
+/* 子分类 */
+.sub-cat-row { padding: 12rpx 0; }
+.sub-cat-scroll { white-space: nowrap; }
+.sub-cat-chip {
+  display: inline-block; padding: 8rpx 24rpx;
+  border-radius: 24rpx; background: #F0F0F0;
+  font-size: 24rpx; color: #666666; margin-right: 12rpx;
+}
+.sub-active { background: #EEF2FF; color: #4F80FF; }
+
+/* 保存/取消按钮 */
+.btn-row { position: fixed; bottom: 0; left: 0; right: 0; padding: 20rpx 24rpx 40rpx; background: #F5F6FA; display: flex; gap: 20rpx; z-index: 10; }
+.btn-save {
+  flex: 1; height: 96rpx; background: #4F80FF;
+  color: #FFFFFF; border: none;
+  border-radius: 48rpx; font-size: 32rpx; font-weight: 500;
+}
+.btn-save::after { border: none; }
+.btn-cancel {
+  flex: 1; height: 96rpx; background: #FFFFFF;
+  color: #666666; border: 1rpx solid #E8E8E8;
+  border-radius: 48rpx; font-size: 32rpx; font-weight: 500;
+}
+.btn-cancel::after { border: none; }
+
+/* 分类弹窗 */
+.cat-modal-mask {
+  position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.5); display: flex;
+  align-items: flex-end; z-index: 100;
+}
+.cat-modal {
+  background: #FFFFFF; border-radius: 24rpx 24rpx 0 0;
+  padding: 32rpx 24rpx 60rpx; width: 100%;
+}
+.cat-modal-title { font-size: 32rpx; font-weight: 500; color: #1A1A2E; text-align: center; margin-bottom: 32rpx; }
+.cat-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20rpx; }
+.cat-cell {
+  display: flex; flex-direction: column; align-items: center; gap: 8rpx;
+  padding: 20rpx 0; border-radius: 12rpx; background: #F9F9F9;
+}
+.cat-selected { background: #EEF2FF; }
+.cat-cell-icon { font-size: 44rpx; }
+.cat-cell-name { font-size: 22rpx; color: #444444; }
+
+.loading-wrap { text-align: center; padding: 80rpx 0; color: #999999; font-size: 28rpx; }

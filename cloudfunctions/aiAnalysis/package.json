@@ -1,0 +1,9 @@
+{
+  "name": "aiAnalysis",
+  "version": "1.0.0",
+  "description": "AI账单分析云函数（DeepSeek）",
+  "dependencies": {
+    "wx-server-sdk": "~2.6.3",
+    "node-fetch": "^2.7.0"
+  }
+}

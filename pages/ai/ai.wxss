@@ -1,0 +1,190 @@
+/* pages/ai/ai.wxss - AI账单分析页 */
+
+.page {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  background: #F5F6FA;
+  padding-bottom: 0;
+}
+
+/* 月份选择器 */
+.month-nav {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24rpx 0 12rpx;
+  background: #FFFFFF;
+}
+.nav-arrow {
+  width: 60rpx;
+  height: 60rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 36rpx;
+  color: #666;
+}
+.month-label {
+  font-size: 32rpx;
+  font-weight: 600;
+  color: #333;
+  padding: 0 20rpx;
+}
+
+/* 月度总结卡片 */
+.summary-card {
+  margin: 20rpx 24rpx;
+  padding: 30rpx;
+  cursor: pointer;
+  transition: transform 0.15s;
+}
+.summary-card:active {
+  transform: scale(0.98);
+}
+.summary-header {
+  margin-bottom: 12rpx;
+}
+.summary-icon {
+  font-size: 40rpx;
+  margin-right: 12rpx;
+}
+.summary-title {
+  font-size: 32rpx;
+  font-weight: 600;
+  color: #333;
+}
+.summary-desc {
+  font-size: 24rpx;
+  line-height: 1.6;
+}
+.summary-action {
+  display: flex;
+  align-items: center;
+}
+.action-arrow {
+  font-size: 32rpx;
+  color: #CCC;
+  margin-left: 4rpx;
+}
+
+/* 聊天区域 */
+.chat-area {
+  flex: 1;
+  padding: 20rpx 24rpx;
+  overflow-y: auto;
+  padding-bottom: 20rpx;
+}
+
+/* 消息行 */
+.msg-row {
+  display: flex;
+  margin-bottom: 24rpx;
+  align-items: flex-start;
+}
+.msg-user {
+  justify-content: flex-end;
+}
+.msg-ai {
+  justify-content: flex-start;
+}
+
+/* AI 头像 */
+.ai-avatar {
+  width: 64rpx;
+  height: 64rpx;
+  border-radius: 50%;
+  background: #EEF2FF;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 32rpx;
+  flex-shrink: 0;
+  margin-right: 16rpx;
+  margin-top: 4rpx;
+}
+
+/* 消息气泡 */
+.msg-bubble {
+  max-width: 78%;
+  padding: 24rpx 28rpx;
+  border-radius: 20rpx;
+  font-size: 28rpx;
+  line-height: 1.7;
+  word-break: break-all;
+}
+.user-bubble {
+  background: #4F80FF;
+  color: #FFFFFF;
+  border-top-right-radius: 4rpx;
+}
+.ai-bubble {
+  background: #FFFFFF;
+  color: #333333;
+  border-top-left-radius: 4rpx;
+  box-shadow: 0 2rpx 8rpx rgba(0,0,0,0.05);
+  white-space: pre-wrap;
+}
+
+/* 正在输入动画 */
+.typing-bubble {
+  padding: 28rpx 32rpx;
+}
+.typing-dots {
+  display: flex;
+  gap: 12rpx;
+}
+.dot {
+  width: 14rpx;
+  height: 14rpx;
+  border-radius: 50%;
+  background: #BBBBBB;
+  animation: bounce 1.2s infinite;
+}
+.dot:nth-child(2) {
+  animation-delay: 0.2s;
+}
+.dot:nth-child(3) {
+  animation-delay: 0.4s;
+}
+
+@keyframes bounce {
+  0%, 60%, 100% { transform: translateY(0); opacity: 0.4; }
+  30% { transform: translateY(-12rpx); opacity: 1; }
+}
+
+/* 底部输入栏 */
+.input-bar {
+  display: flex;
+  align-items: center;
+  padding: 16rpx 24rpx;
+  padding-bottom: calc(16rpx + env(safe-area-inset-bottom));
+  background: #FFFFFF;
+  border-top: 1rpx solid #F0F0F0;
+  gap: 16rpx;
+}
+.chat-input {
+  flex: 1;
+  height: 72rpx;
+  background: #F5F6FA;
+  border-radius: 36rpx;
+  padding: 0 28rpx;
+  font-size: 28rpx;
+  color: #333;
+}
+.send-btn {
+  height: 72rpx;
+  padding: 0 28rpx;
+  background: #E0E0E0;
+  border-radius: 36rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #FFFFFF;
+  font-size: 28rpx;
+  flex-shrink: 0;
+  transition: background 0.2s;
+}
+.send-btn.active {
+  background: #4F80FF;
+}

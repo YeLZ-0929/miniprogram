@@ -1,0 +1,227 @@
+/* pages/search/search.wxss */
+.search-container {
+  padding-bottom: 40rpx;
+}
+
+/* 搜索栏 */
+.search-bar {
+  display: flex;
+  align-items: center;
+  padding: 20rpx 24rpx;
+  background: #fff;
+  gap: 16rpx;
+}
+.search-input-wrap {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  background: #F5F6FA;
+  border-radius: 40rpx;
+  padding: 0 20rpx;
+  height: 72rpx;
+}
+.search-icon {
+  font-size: 30rpx;
+  margin-right: 12rpx;
+}
+.search-input {
+  flex: 1;
+  font-size: 28rpx;
+  color: #333;
+  height: 72rpx;
+}
+.search-clear {
+  font-size: 28rpx;
+  color: #999;
+  padding: 0 8rpx;
+}
+.btn-search {
+  background: #4F80FF;
+  color: #fff;
+  border-radius: 40rpx;
+  padding: 0 30rpx;
+  height: 72rpx;
+  line-height: 72rpx;
+  font-size: 28rpx;
+  white-space: nowrap;
+}
+
+/* 类型筛选 */
+.type-filter {
+  display: flex;
+  align-items: center;
+  padding: 12rpx 24rpx;
+  background: #fff;
+  border-bottom: 1rpx solid #F0F0F0;
+  gap: 16rpx;
+}
+.type-btn {
+  padding: 8rpx 24rpx;
+  border-radius: 30rpx;
+  font-size: 26rpx;
+  color: #666;
+  background: #F5F6FA;
+}
+.type-btn.active {
+  background: #EEF2FF;
+  color: #4F80FF;
+  font-weight: 500;
+}
+.type-btn-advanced {
+  margin-left: auto;
+  font-size: 24rpx;
+  color: #4F80FF;
+  padding: 8rpx 16rpx;
+}
+.advanced-open {
+  font-weight: 500;
+}
+
+/* 高级筛选面板 */
+.advanced-panel {
+  margin: 12rpx 24rpx;
+  padding: 0;
+}
+.adv-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 24rpx 28rpx;
+}
+.adv-label {
+  font-size: 28rpx;
+  color: #333;
+  min-width: 120rpx;
+}
+.adv-value {
+  display: flex;
+  align-items: center;
+  gap: 8rpx;
+  color: #555;
+  font-size: 28rpx;
+}
+.adv-arrow {
+  font-size: 32rpx;
+  color: #999;
+}
+.adv-divider {
+  height: 1rpx;
+  background: #F0F0F0;
+  margin: 0 28rpx;
+}
+.adv-amount-range {
+  display: flex;
+  align-items: center;
+  gap: 12rpx;
+}
+.adv-amount-input {
+  width: 160rpx;
+  height: 56rpx;
+  background: #F5F6FA;
+  border-radius: 8rpx;
+  padding: 0 16rpx;
+  font-size: 26rpx;
+  color: #333;
+  text-align: center;
+}
+.adv-tilde {
+  color: #999;
+  font-size: 28rpx;
+}
+
+/* 结果汇总 */
+.result-summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16rpx 30rpx;
+}
+.result-count {
+  font-size: 26rpx;
+  color: #666;
+}
+.result-total {
+  font-size: 24rpx;
+}
+
+/* 账单列表 */
+.bill-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 12rpx 24rpx;
+  padding: 20rpx 24rpx;
+}
+.bill-left {
+  display: flex;
+  align-items: center;
+  gap: 20rpx;
+}
+.cat-icon-wrap {
+  width: 72rpx;
+  height: 72rpx;
+  border-radius: 20rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.cat-icon {
+  font-size: 36rpx;
+}
+.bill-info {
+  display: flex;
+  flex-direction: column;
+}
+.bill-cat {
+  font-size: 28rpx;
+  font-weight: 500;
+  color: #333;
+  margin-bottom: 6rpx;
+}
+.bill-note {
+  font-size: 24rpx;
+  max-width: 300rpx;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.bill-member {
+  font-size: 22rpx;
+  color: #AAAAAA;
+  margin-top: 4rpx;
+  display: block;
+}
+.bill-right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+.bill-amount {
+  font-size: 32rpx;
+  font-weight: 600;
+  margin-bottom: 6rpx;
+}
+.bill-date {
+  font-size: 22rpx;
+}
+
+/* 提示状态 */
+.tip-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 100rpx 0;
+}
+.tip-emoji {
+  font-size: 80rpx;
+  margin-bottom: 20rpx;
+}
+.tip-text {
+  font-size: 30rpx;
+  color: #555;
+  margin-bottom: 12rpx;
+}
+.tip-sub {
+  font-size: 24rpx;
+  color: #aaa;
+}

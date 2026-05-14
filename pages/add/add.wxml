@@ -1,0 +1,230 @@
+<!-- pages/add/add.wxml -->
+<view class="page">
+
+  <!-- 收入/支出切换 -->
+  <view class="type-switch">
+    <view
+      class="type-tab {{bill.type === 'expense' ? 'active-expense' : ''}}"
+      bindtap="switchType"
+      data-type="expense"
+    >支出</view>
+    <view
+      class="type-tab {{bill.type === 'income' ? 'active-income' : ''}}"
+      bindtap="switchType"
+      data-type="income"
+    >收入</view>
+  </view>
+
+  <!-- 录入模式切换 -->
+  <view class="mode-tabs">
+    <view class="mode-tab {{inputMode === 'manual' ? 'mode-active' : ''}}" bindtap="switchInputMode" data-mode="manual">
+      <text>✏️ 手动</text>
+    </view>
+    <view class="mode-tab {{inputMode === 'text' ? 'mode-active' : ''}}" bindtap="switchInputMode" data-mode="text">
+      <text>💬 文字</text>
+    </view>
+    <view class="mode-tab {{inputMode === 'photo' ? 'mode-active' : ''}}" bindtap="switchInputMode" data-mode="photo">
+      <text>📷 拍照</text>
+    </view>
+  </view>
+
+  <!-- ===== 手动录入 ===== -->
+  <view class="card" wx:if="{{inputMode === 'manual'}}">
+    <!-- 金额输入 -->
+    <view class="amount-row">
+      <text class="currency-sign {{bill.type === 'expense' ? 'text-danger' : 'text-success'}}">¥</text>
+      <input
+        class="amount-input {{bill.type === 'expense' ? 'text-danger' : 'text-success'}}"
+        type="digit"
+        placeholder="0.00"
+        placeholder-style="color:#CCCCCC"
+        value="{{bill.amount}}"
+        bindinput="onAmountInput"
+        focus="{{inputMode === 'manual'}}"
+        adjust-position="{{false}}"
+      />
+    </view>
+
+    <view class="divider"></view>
+
+    <!-- 分类选择 -->
+    <view class="form-row" bindtap="openCategoryModal">
+      <text class="row-label">分类</text>
+      <view class="row-value">
+        <text class="cat-icon">{{categories[0].icon}}</text>
+        <text wx:for="{{categories}}" wx:key="id" wx:if="{{item.id === bill.categoryId}}">{{item.name}}</text>
+        <text class="arrow">›</text>
+      </view>
+    </view>
+
+    <!-- 子分类（如有） -->
+    <view class="sub-cat-row" wx:if="{{showSubCategory && subCategories.length > 0}}">
+      <scroll-view scroll-x class="sub-cat-scroll">
+        <view
+          class="sub-cat-chip {{item === bill.subCategory ? 'sub-active' : ''}}"
+          wx:for="{{subCategories}}"
+          wx:key="*this"
+          bindtap="selectSubCategory"
+          data-sub="{{item}}"
+        >{{item}}</view>
+      </scroll-view>
+    </view>
+
+    <!-- 日期 -->
+    <view class="form-row">
+      <text class="row-label">日期</text>
+      <picker mode="date" value="{{bill.date}}" bindchange="onDateChange">
+        <view class="row-value">
+          <text>{{bill.date}}</text>
+          <text class="arrow">›</text>
+        </view>
+      </picker>
+    </view>
+
+    <!-- 备注 -->
+    <view class="form-row">
+      <text class="row-label">备注</text>
+      <input
+        class="note-input"
+        placeholder="添加备注（可选）"
+        placeholder-style="color:#CCCCCC"
+        value="{{bill.note}}"
+        bindinput="onNoteInput"
+        maxlength="50"
+      />
+    </view>
+  </view>
+
+  <!-- ===== 文字识别 ===== -->
+  <view class="card" wx:elif="{{inputMode === 'text'}}">
+    <view class="text-mode-tip">💡 输入一句话，自动识别金额和分类</view>
+    <view class="text-examples">
+      <text class="example-chip" bindtap="onSmartTextInput" data-value="午饭35元">午饭35元</text>
+      <text class="example-chip" bindtap="onSmartTextInput" data-value="打车花了28块">打车花了28块</text>
+      <text class="example-chip" bindtap="onSmartTextInput" data-value="超市买菜52">超市买菜52</text>
+    </view>
+    <textarea
+      class="smart-textarea"
+      placeholder="例如：今天午饭花了35元、打车28块钱..."
+      value="{{smartText}}"
+      bindinput="onSmartTextInput"
+      auto-height
+      maxlength="200"
+    />
+    <button class="btn-parse" bindtap="parseSmartText" loading="{{smartParsing}}">
+      {{smartParsing ? '识别中...' : '智能识别'}}
+    </button>
+
+    <!-- 单笔识别结果预览 -->
+    <view class="parse-result" wx:if="{{smartResult && !isMultiParse}}">
+      <view class="result-row">
+        <text class="result-label">金额</text>
+        <text class="result-value {{bill.type === 'expense' ? 'text-danger' : 'text-success'}}">
+          ¥{{smartResult.amount}}
+        </text>
+      </view>
+      <view class="result-row">
+        <text class="result-label">分类</text>
+        <text class="result-value">
+          {{smartResult.categoryId}}
+        </text>
+      </view>
+      <view class="result-row">
+        <text class="result-label">日期</text>
+        <text class="result-value">{{smartResult.date}}</text>
+      </view>
+      <button class="btn-confirm" bindtap="confirmSmartResult">✓ 确认使用此结果</button>
+    </view>
+
+    <!-- 多笔识别结果预览 -->
+    <view class="parse-result" wx:if="{{isMultiParse && smartResults.length > 0}}">
+      <view class="result-row">
+        <text class="result-label">识别到 {{smartResults.length}} 笔记录</text>
+      </view>
+      <view class="multi-list">
+        <view class="multi-item" wx:for="{{smartResults}}" wx:key="index">
+          <text class="multi-index">{{index + 1}}.</text>
+          <text class="multi-note">{{item.note || item.raw}}</text>
+          <text class="multi-amount">¥{{item.amount}}</text>
+        </view>
+      </view>
+      <button class="btn-confirm" bindtap="saveMultiBills" loading="{{saving}}">
+        {{saving ? '保存中...' : '全部保存（' + smartResults.length + '笔）'}}
+      </button>
+    </view>
+  </view>
+
+  <!-- ===== 拍照识别 ===== -->
+  <view class="card" wx:elif="{{inputMode === 'photo'}}">
+    <!-- 拍照区域 -->
+    <view class="photo-zone" bindtap="{{ocrParsing ? '' : 'choosePhoto'}}">
+      <view wx:if="{{!photoPath && !ocrParsing}}" class="photo-empty">
+        <text class="photo-icon">📷</text>
+        <text class="photo-hint">拍照或从相册选择小票/发票</text>
+        <text class="photo-sub">支持超市小票、外卖单、发票等</text>
+      </view>
+      <view wx:elif="{{ocrParsing}}" class="ocr-loading">
+        <view class="ocr-spinner"></view>
+        <text class="ocr-loading-text">正在识别中，请稍候…</text>
+        <text class="ocr-tip">AI智能提取金额、日期、商家</text>
+      </view>
+      <image wx:else src="{{photoPath}}" mode="aspectFit" class="preview-img"/>
+    </view>
+
+    <!-- 已识别：操作按钮 -->
+    <view wx:if="{{photoPath && !ocrParsing}}" class="ocr-actions">
+      <view class="ocr-btn-retake" bindtap="choosePhoto">
+        <text>🔄 重新拍照</text>
+      </view>
+      <view class="ocr-btn-manual" bindtap="switchInputMode" data-mode="manual">
+        <text>✏️ 手动填写</text>
+      </view>
+    </view>
+
+    <!-- 识别说明 -->
+    <view wx:if="{{!photoPath && !ocrParsing}}" class="ocr-guide">
+      <view class="guide-row">
+        <text class="guide-icon">✅</text>
+        <text class="guide-text">图片清晰，金额文字可见</text>
+      </view>
+      <view class="guide-row">
+        <text class="guide-icon">✅</text>
+        <text class="guide-text">支持横/竖拍，自动旋转校正</text>
+      </view>
+      <view class="guide-row">
+        <text class="guide-icon">💡</text>
+        <text class="guide-text">识别后可手动修改金额和分类</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 保存按钮 -->
+  <view class="save-wrap">
+    <button
+      class="btn-save {{bill.type === 'expense' ? 'btn-expense' : 'btn-income'}}"
+      bindtap="saveBill"
+      loading="{{saving}}"
+    >
+      保存记录
+    </button>
+  </view>
+
+  <!-- 分类选择弹窗 -->
+  <view class="cat-modal-mask" wx:if="{{showCategoryModal}}" bindtap="closeCategoryModal">
+    <view class="cat-modal" catchtap="">
+      <view class="cat-modal-title">选择分类</view>
+      <view class="cat-grid">
+        <view
+          class="cat-cell {{item.id === bill.categoryId ? 'cat-selected' : ''}}"
+          wx:for="{{categories}}"
+          wx:key="id"
+          bindtap="selectCategory"
+          data-index="{{index}}"
+        >
+          <text class="cat-cell-icon">{{item.icon}}</text>
+          <text class="cat-cell-name">{{item.name}}</text>
+        </view>
+      </view>
+    </view>
+  </view>
+</view>

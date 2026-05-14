@@ -1,0 +1,74 @@
+<!-- pages/ai/ai.wxml - AI账单分析页 -->
+<view class="page">
+
+  <!-- 月份选择 -->
+  <view class="month-nav">
+    <view class="nav-arrow" bindtap="prevMonth">‹</view>
+    <picker mode="selector" range="{{months}}" range-key="label" bindchange="onMonthChange">
+      <text class="month-label">{{year}}年{{month}}月</text>
+    </picker>
+    <view class="nav-arrow" bindtap="nextMonth">›</view>
+  </view>
+
+  <!-- 月度总结卡片 -->
+  <view class="summary-card card" bindtap="generateSummary">
+    <view class="summary-header flex-between">
+      <view class="flex" style="align-items:center;">
+        <text class="summary-icon">🤖</text>
+        <text class="summary-title">月度消费总结</text>
+      </view>
+      <view class="summary-action">
+        <text class="text-muted" style="font-size:24rpx;">点击生成</text>
+        <text class="action-arrow">›</text>
+      </view>
+    </view>
+    <text class="summary-desc text-muted">AI 帮你分析本月消费，发现趋势，给出建议</text>
+  </view>
+
+  <!-- 聊天消息区 -->
+  <scroll-view class="chat-area" scroll-y scroll-into-view="{{scrollToId}}" scroll-with-animation>
+    <block wx:for="{{messages}}" wx:key="index">
+      <!-- 用户消息 -->
+      <view wx:if="{{item.role === 'user'}}" class="msg-row msg-user" id="msg-{{index}}">
+        <view class="msg-bubble user-bubble">
+          <text>{{item.content}}</text>
+        </view>
+      </view>
+      <!-- AI 消息 -->
+      <view wx:else class="msg-row msg-ai" id="msg-{{index}}">
+        <view class="ai-avatar">🤖</view>
+        <view class="msg-bubble ai-bubble">
+          <text>{{item.content}}</text>
+        </view>
+      </view>
+    </block>
+
+    <!-- AI 正在输入 -->
+    <view wx:if="{{typing}}" class="msg-row msg-ai">
+      <view class="ai-avatar">🤖</view>
+      <view class="msg-bubble ai-bubble typing-bubble">
+        <view class="typing-dots">
+          <view class="dot"></view>
+          <view class="dot"></view>
+          <view class="dot"></view>
+        </view>
+      </view>
+    </view>
+  </scroll-view>
+
+  <!-- 底部输入框 -->
+  <view class="input-bar">
+    <input
+      class="chat-input"
+      value="{{inputText}}"
+      placeholder="问我任何关于账单的问题…"
+      bindinput="onInput"
+      bindconfirm="sendMessage"
+      confirm-type="send"
+      disabled="{{typing}}"
+    />
+    <view class="send-btn {{inputText && !typing ? 'active' : ''}}" bindtap="sendMessage">
+      <text>发送</text>
+    </view>
+  </view>
+</view>

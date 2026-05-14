@@ -1,0 +1,217 @@
+<!-- pages/stats/stats.wxml -->
+<view class="page">
+
+  <!-- 月份选择器 -->
+  <view class="month-nav">
+    <view class="nav-arrow" bindtap="prevMonth">‹</view>
+    <picker mode="selector" range="{{months}}" range-key="label" bindchange="onMonthChange">
+      <text class="month-label">{{year}}年{{month}}月</text>
+    </picker>
+    <view class="nav-arrow" bindtap="nextMonth">›</view>
+  </view>
+
+  <!-- 月度汇总卡片 -->
+  <view class="summary-card">
+    <view class="sum-item">
+      <text class="sum-label">支出</text>
+      <text class="sum-val expense">¥{{totalExpenseText}}</text>
+    </view>
+    <view class="sum-divider"></view>
+    <view class="sum-item">
+      <text class="sum-label">收入</text>
+      <text class="sum-val income">¥{{totalIncomeText}}</text>
+    </view>
+    <view class="sum-divider"></view>
+    <view class="sum-item">
+      <text class="sum-label">结余</text>
+      <text class="sum-val {{netAmountType}}">
+        ¥{{netAmountText}}
+      </text>
+    </view>
+  </view>
+
+  <!-- 视图切换 -->
+  <view class="view-tabs">
+    <view class="view-tab {{activeTab === 'category' ? 'vtab-active' : ''}}" bindtap="switchTab" data-tab="category">分类</view>
+    <view class="view-tab {{activeTab === 'member' ? 'vtab-active' : ''}}" bindtap="switchTab" data-tab="member">成员</view>
+    <view class="view-tab {{activeTab === 'trend' ? 'vtab-active' : ''}}" bindtap="switchTab" data-tab="trend">趋势</view>
+    <view class="view-tab {{activeTab === 'health' ? 'vtab-active' : ''}}" bindtap="switchTab" data-tab="health">健康</view>
+    <view class="view-tab vtab-ai" bindtap="goToAI">
+      <text>🤖 AI</text>
+    </view>
+  </view>
+
+  <!-- ===== 分类视图 ===== -->
+  <view wx:if="{{activeTab === 'category'}}">
+    <!-- 饼图占位（实际使用 ec-canvas 组件） -->
+    <view class="chart-placeholder">
+      <view class="pie-visual">
+        <view
+          wx:for="{{pieData}}"
+          wx:key="name"
+          class="pie-legend-item"
+        >
+          <view class="legend-dot" style="background:{{item.color}}"></view>
+          <text class="legend-name">{{item.name}}</text>
+          <text class="legend-amount">¥{{item.valueText}}</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 分类明细列表 -->
+    <view class="cat-stats-list">
+      <view
+        class="cat-stat-row"
+        wx:for="{{categoryStats}}"
+        wx:key="categoryId"
+        bindtap="onCategoryTap"
+        data-id="{{item.categoryId}}"
+        data-name="{{item.name}}"
+      >
+        <view class="cat-icon-wrap" style="background:{{item.color}}22">
+          <text>{{item.icon}}</text>
+        </view>
+        <view class="cat-stat-info">
+          <view class="cat-stat-top">
+            <text class="cat-stat-name">{{item.name}}</text>
+            <text class="cat-stat-amount">¥{{item.totalText}}</text>
+          </view>
+          <view class="progress-bar-wrap">
+            <view class="progress-bar" style="width:{{item.percent}}%;background:{{item.color}}"></view>
+          </view>
+          <text class="cat-stat-percent">{{item.percent}}%  共{{item.count}}笔</text>
+        </view>
+      </view>
+
+      <view class="empty-state" wx:if="{{!loading && categoryStats.length === 0}}">
+        <text style="font-size:60rpx">📊</text>
+        <text>本月暂无支出记录</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- ===== 成员视图 ===== -->
+  <view wx:elif="{{activeTab === 'member'}}">
+    <view class="member-stats-list">
+      <view
+        class="member-stat-row"
+        wx:for="{{memberStats}}"
+        wx:key="openid"
+        bindtap="onMemberTap"
+        data-openid="{{item.openid}}"
+        data-name="{{item.fullName}}"
+      >
+        <image class="member-avatar" src="{{item.avatarUrl || '/images/default_avatar.png'}}" mode="aspectFill"/>
+        <view class="member-info">
+          <text class="member-name">{{item.fullName}}</text>
+          <text class="member-sub">{{item.count}}笔记录</text>
+        </view>
+        <view class="member-amounts">
+          <text class="member-expense">支出 ¥{{item.expenseText}}</text>
+          <text class="member-income" wx:if="{{item.income > 0}}">收入 ¥{{item.incomeText}}</text>
+        </view>
+      </view>
+      <!-- 成员支出占比 -->
+      <view class="member-bar-section" wx:if="{{memberStats.length > 1}}">
+        <text class="section-title-sm">支出对比</text>
+        <view class="member-bar-group" wx:for="{{memberStats}}" wx:key="openid">
+          <view class="member-bar-label">{{item.fullName}}</view>
+          <view class="member-bar-track">
+            <view class="member-bar-fill" style="width:{{item.expensePercent}}%;background:{{index === 0 ? '#FF6B6B' : '#4ECDC4'}}"></view>
+          </view>
+          <text class="member-bar-val">¥{{item.expenseText}}</text>
+        </view>
+      </view>
+      <view class="empty-state" wx:if="{{!loading && memberStats.length === 0}}">
+        <text style="font-size:60rpx">👨‍👩‍👧</text>
+        <text>暂无成员数据</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- ===== 趋势视图 ===== -->
+  <view wx:elif="{{activeTab === 'trend'}}">
+    <view class="trend-card">
+      <text class="trend-title">近6月收支趋势</text>
+      <!-- 简易条形图（实际项目中可用 ECharts） -->
+      <view class="bar-chart">
+        <view
+          class="bar-group"
+          wx:for="{{barData.months}}"
+          wx:key="*this"
+          wx:for-index="idx"
+        >
+          <view class="bar-col">
+            <view class="bar expense-bar" style="height:{{barData.expense[idx] > 0 ? (barData.expense[idx] / 5000 * 120 < 120 ? barData.expense[idx] / 5000 * 120 : 120) : 4}}rpx"></view>
+            <view class="bar income-bar" style="height:{{barData.income[idx] > 0 ? (barData.income[idx] / 5000 * 120 < 120 ? barData.income[idx] / 5000 * 120 : 120) : 4}}rpx"></view>
+          </view>
+          <text class="bar-label">{{item}}</text>
+        </view>
+      </view>
+      <view class="bar-legend">
+        <view class="legend-item"><view class="l-dot expense-bg"></view><text>支出</text></view>
+        <view class="legend-item"><view class="l-dot income-bg"></view><text>收入</text></view>
+      </view>
+    </view>
+  </view>
+
+  <view class="loading-wrap" wx:if="{{loading}}">加载中...</view>
+
+  <!-- ===== 健康评分视图 ===== -->
+  <view wx:if="{{activeTab === 'health'}}">
+    <!-- 总分卡片 -->
+    <view class="health-score-card">
+      <view class="health-ring-wrap">
+        <view class="health-ring" style="border-color: {{healthColor}}">
+          <text class="health-score-num" style="color: {{healthColor}}">{{healthScore}}</text>
+          <text class="health-score-sub">/ 100</text>
+        </view>
+      </view>
+      <view class="health-right">
+        <view class="health-level-badge" style="background: {{healthColor}}22; color: {{healthColor}}">{{healthLevel}}</view>
+        <text class="health-month-tip">{{year}}年{{month}}月财务状况</text>
+        <view class="health-stars">
+          <text wx:if="{{healthScore >= 20}}">⭐</text>
+          <text wx:if="{{healthScore >= 40}}">⭐</text>
+          <text wx:if="{{healthScore >= 60}}">⭐</text>
+          <text wx:if="{{healthScore >= 80}}">⭐</text>
+          <text wx:if="{{healthScore >= 95}}">⭐</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 五维雷达（进度条形式） -->
+    <view class="card" style="margin: 16rpx; padding: 28rpx;">
+      <text class="section-title-sm">评分维度</text>
+      <view class="dim-list">
+        <view wx:for="{{healthDimensions}}" wx:key="name" class="dim-row">
+          <view class="dim-left">
+            <text class="dim-icon">{{item.icon}}</text>
+            <view class="dim-info">
+              <text class="dim-name">{{item.name}}</text>
+              <text class="dim-desc">{{item.desc}}</text>
+            </view>
+          </view>
+          <view class="dim-right">
+            <text class="dim-score" style="color: {{item.score >= item.max * 0.8 ? '#52C41A' : item.score >= item.max * 0.5 ? '#FAAD14' : '#FF4D4F'}}">{{item.score}}</text>
+            <text class="dim-max">/{{item.max}}</text>
+          </view>
+        </view>
+        <!-- 进度条 -->
+        <view wx:for="{{healthDimensions}}" wx:key="name" class="dim-progress-wrap">
+          <view class="dim-progress-fill" style="width: {{item.score / item.max * 100}}%; background: {{item.score >= item.max * 0.8 ? '#52C41A' : item.score >= item.max * 0.5 ? '#FAAD14' : '#FF4D4F'}}"></view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 改善建议 -->
+    <view class="card" style="margin: 0 16rpx 16rpx; padding: 28rpx;">
+      <text class="section-title-sm">改善建议</text>
+      <view class="tips-list">
+        <view wx:for="{{healthTips}}" wx:key="*this" class="tip-item">
+          <text class="tip-text">{{item}}</text>
+        </view>
+      </view>
+    </view>
+  </view>
+</view>

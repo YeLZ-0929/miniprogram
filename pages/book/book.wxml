@@ -1,0 +1,135 @@
+<!-- pages/book/book.wxml -->
+<view class="page">
+
+  <!-- ===== 账本列表模式 ===== -->
+  <block wx:if="{{mode === 'list'}}">
+    <view class="section-title">我的账本</view>
+
+    <view class="book-list">
+      <view
+        class="book-card {{item._id === currentBookId ? 'active' : ''}}"
+        wx:for="{{bookList}}"
+        wx:key="_id"
+      >
+        <view class="book-info" bindtap="switchBook" data-index="{{index}}">
+          <view class="book-icon">{{item.icon}}</view>
+          <view class="book-detail">
+            <text class="book-name">{{item.name}}</text>
+            <text class="book-role">{{item.role === 'admin' ? '管理员' : '成员'}}</text>
+          </view>
+          <view class="check-mark" wx:if="{{item._id === currentBookId}}">✓</view>
+        </view>
+        <view class="book-actions">
+          <view class="action-btn" bindtap="showInvite" data-index="{{index}}" wx:if="{{item.role === 'admin'}}">
+            <text>邀请成员</text>
+          </view>
+          <view class="action-btn" bindtap="showMemberList" data-index="{{index}}">
+            <text>查看成员</text>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <view class="action-row">
+      <button class="btn-create" bindtap="goCreate">+ 新建账本</button>
+      <button class="btn-join" bindtap="goJoin">输入邀请码加入</button>
+    </view>
+  </block>
+
+  <!-- ===== 引导首次创建/加入 ===== -->
+  <block wx:elif="{{mode === 'onboard'}}">
+    <view class="onboard-hero">
+      <text class="onboard-icon">📒</text>
+      <text class="onboard-title">还没有账本</text>
+      <text class="onboard-desc">新建一个属于自己的账本，或加入家人的账本</text>
+    </view>
+    <view class="onboard-actions">
+      <button class="btn-primary" bindtap="goCreate">新建账本</button>
+      <button class="btn-ghost" bindtap="goJoin">加入已有账本</button>
+    </view>
+  </block>
+
+  <!-- ===== 创建账本 ===== -->
+  <block wx:elif="{{mode === 'create'}}">
+    <view class="form-page">
+      <view class="back-btn" bindtap="goBack">← 返回</view>
+      <view class="form-title">新建账本</view>
+      <view class="form-group">
+        <text class="label">账本名称</text>
+        <input
+          class="input"
+          placeholder="例如：家庭日常、旅行基金"
+          value="{{newBookName}}"
+          bindinput="onBookNameInput"
+          maxlength="20"
+        />
+      </view>
+      <button class="btn-primary" bindtap="handleCreate" loading="{{loading}}">创建</button>
+    </view>
+  </block>
+
+  <!-- ===== 加入账本 ===== -->
+  <block wx:elif="{{mode === 'join'}}">
+    <view class="form-page">
+      <view class="back-btn" bindtap="goBack">← 返回</view>
+      <view class="form-title">加入账本</view>
+      <view class="form-group">
+        <text class="label">邀请码（6位）</text>
+        <input
+          class="input input-code"
+          placeholder="请输入邀请码"
+          value="{{inviteCode}}"
+          bindinput="onInviteCodeInput"
+          maxlength="6"
+          style="letter-spacing: 12rpx; text-align: center; font-size: 40rpx;"
+        />
+      </view>
+      <button class="btn-primary" bindtap="handleJoin" loading="{{loading}}">加入</button>
+    </view>
+  </block>
+
+  <!-- 邀请码弹窗 -->
+  <view class="modal-mask" wx:if="{{showInviteModal}}" bindtap="hideInviteModal">
+    <view class="modal-card" catchtap="">
+      <text class="modal-title">邀请成员加入</text>
+      <text class="modal-book-name">「{{selectedBook.name}}」</text>
+      <view class="invite-code-box">
+        <text class="invite-code">{{selectedBook.inviteCode}}</text>
+      </view>
+      <text class="modal-tip">将邀请码发给家人，他们输入后即可加入账本</text>
+      <button class="btn-primary" bindtap="copyCode">复制邀请码</button>
+    </view>
+  </view>
+
+  <!-- 成员列表弹窗 -->
+  <view class="modal-mask" wx:if="{{showMemberModal}}" bindtap="hideMemberModal">
+    <view class="modal-card member-modal" catchtap="">
+      <text class="modal-title">成员管理</text>
+      <text class="modal-book-name">「{{memberBookName}}」</text>
+
+      <view class="member-list">
+        <view class="member-row" wx:for="{{memberList}}" wx:key="openid">
+          <image class="member-avatar" src="{{item.avatarUrl || '/images/default_avatar.jpg'}}" mode="aspectFill"/>
+          <view class="member-info">
+            <view class="member-name-row">
+              <text class="member-nick">{{item.nickName}}</text>
+              <text class="member-display" wx:if="{{item.displayName}}">({{item.displayName}})</text>
+              <view class="member-role-tag {{item.role === 'admin' ? 'tag-admin' : 'tag-member'}}">
+                {{item.role === 'admin' ? '管理员' : '成员'}}
+              </view>
+            </view>
+            <text class="member-joined">加入于 {{item.joinedAt}}</text>
+          </view>
+          <view class="member-remove" bindtap="removeMember" data-openid="{{item.openid}}" data-name="{{item.nickName}}"
+            wx:if="{{memberIsAdmin && item.role !== 'admin'}}">
+            <text>移除</text>
+          </view>
+        </view>
+
+        <view class="member-empty" wx:if="{{memberList.length === 0}}">
+          <text>暂无成员</text>
+        </view>
+      </view>
+    </view>
+  </view>
+</view>

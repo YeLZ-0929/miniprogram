@@ -1,0 +1,104 @@
+<!-- pages/index/index.wxml -->
+<view class="page">
+
+  <!-- 顶部：账本名 + 月度汇总 -->
+  <view class="header-card">
+    <view class="book-header" bindtap="switchBook">
+      <text class="book-name">{{currentBook.icon}} {{currentBook.name}}</text>
+      <text class="switch-hint">切换 ›</text>
+    </view>
+    <!-- 筛选标题（从统计页跳转时显示） -->
+    <view class="filter-title" wx:if="{{filterTitle}}">
+      <text class="filter-label">{{filterTitle}}</text>
+      <text class="filter-clear" bindtap="clearFilter">清除筛选</text>
+    </view>
+    <view class="month-summary">
+      <view class="summary-item">
+        <text class="summary-label">本月支出</text>
+        <text class="summary-amount expense">¥{{monthExpenseText}}</text>
+      </view>
+      <view class="summary-divider"></view>
+      <view class="summary-item">
+        <text class="summary-label">本月收入</text>
+        <text class="summary-amount income">¥{{monthIncomeText}}</text>
+      </view>
+      <view class="summary-divider"></view>
+      <view class="summary-item">
+        <text class="summary-label">净结余</text>
+        <text class="summary-amount {{netAmountType}}">
+          ¥{{netAmountText}}
+        </text>
+      </view>
+    </view>
+    <!-- 快捷功能入口 -->
+    <view class="quick-actions">
+      <view class="quick-btn" bindtap="goSearch">
+        <text class="quick-icon">🔍</text>
+        <text class="quick-label">搜索</text>
+      </view>
+      <view class="quick-btn" bindtap="goBudget">
+        <text class="quick-icon">📊</text>
+        <text class="quick-label">预算</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 筛选 tab -->
+  <view class="filter-tabs">
+    <view class="filter-tab {{filterType === 'all' ? 'filter-active' : ''}}" bindtap="switchFilter" data-type="all">全部</view>
+    <view class="filter-tab {{filterType === 'expense' ? 'filter-active' : ''}}" bindtap="switchFilter" data-type="expense">支出</view>
+    <view class="filter-tab {{filterType === 'income' ? 'filter-active' : ''}}" bindtap="switchFilter" data-type="income">收入</view>
+  </view>
+
+  <!-- 账单分组列表 -->
+  <view class="bill-groups">
+    <view class="day-group" wx:for="{{billGroups}}" wx:key="date">
+      <!-- 日期行 -->
+      <view class="day-header">
+        <text class="day-date">{{item.dateText || item.date}}</text>
+        <view class="day-summary">
+          <text class="day-expense" wx:if="{{item.totalExpense > 0}}">
+            支 ¥{{item.totalExpenseText}}
+          </text>
+          <text class="day-income" wx:if="{{item.totalIncome > 0}}">
+            收 ¥{{item.totalIncomeText}}
+          </text>
+        </view>
+      </view>
+
+      <!-- 账单行 -->
+      <view class="bill-card">
+        <view
+          class="bill-row"
+          wx:for="{{item.bills}}"
+          wx:key="_id"
+          wx:for-item="bill"
+          bindtap="onBillTap"
+          data-id="{{bill._id}}"
+        >
+          <view class="bill-icon-wrap" style="background:{{bill.categoryColor}}22">
+            <text class="bill-icon">{{bill.categoryIcon}}</text>
+          </view>
+          <view class="bill-info">
+            <text class="bill-cat">{{bill.categoryName}}{{bill.subCategory ? ' · ' + bill.subCategory : ''}}</text>
+            <text class="bill-note" wx:if="{{bill.note}}">{{bill.note}}</text>
+            <text class="bill-member">{{bill.nickName || '我'}}</text>
+          </view>
+          <text class="bill-amount {{bill.type === 'expense' ? 'amount-expense' : 'amount-income'}}">
+            {{bill.type === 'expense' ? '-' : '+'}}¥{{bill.amountText}}
+          </text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 空状态 -->
+    <view class="empty-state" wx:if="{{!loading && billGroups.length === 0}}">
+      <text style="font-size:80rpx">📭</text>
+      <text>本月暂无记录，快去记一笔吧</text>
+    </view>
+
+    <!-- loading -->
+    <view class="loading-wrap" wx:if="{{loading}}">加载中...</view>
+    <view class="loading-wrap" wx:elif="{{!hasMore && billGroups.length > 0}}">已加载全部记录</view>
+  </view>
+</view>

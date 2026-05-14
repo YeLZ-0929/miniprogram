@@ -1,0 +1,143 @@
+<!-- pages/bill/bill.wxml -->
+<view class="page" wx:if="{{!loading && bill}}">
+
+  <!-- ===== 查看模式 ===== -->
+  <block wx:if="{{!editing}}">
+    <view class="detail-card">
+      <view class="amount-area" style="background:{{bill.type === 'expense' ? '#FFF5F5' : '#F6FFED'}}">
+        <view class="cat-icon-big" style="background:{{bill.categoryColor}}22">
+          <text>{{bill.categoryIcon}}</text>
+        </view>
+        <text class="cat-name">{{bill.displayCategoryName}}</text>
+        <text class="amount {{bill.type === 'expense' ? 'amount-expense' : 'amount-income'}}">
+          {{bill.type === 'expense' ? '-' : '+'}}¥{{bill.amountText}}
+        </text>
+      </view>
+
+      <view class="detail-rows">
+        <view class="detail-row">
+          <text class="detail-label">日期</text>
+          <text class="detail-val">{{bill.date}}</text>
+        </view>
+        <view class="detail-row" wx:if="{{bill.note}}">
+          <text class="detail-label">备注</text>
+          <text class="detail-val">{{bill.note}}</text>
+        </view>
+        <view class="detail-row">
+          <text class="detail-label">记录人</text>
+          <text class="detail-val">{{bill.nickName || '我'}}</text>
+        </view>
+        <view class="detail-row">
+          <text class="detail-label">类型</text>
+          <text class="detail-val">{{bill.type === 'expense' ? '支出' : '收入'}}</text>
+        </view>
+      </view>
+    </view>
+
+    <view class="btn-row">
+      <button class="btn-edit" bindtap="toggleEdit">编辑</button>
+    </view>
+    <view class="del-wrap">
+      <button class="btn-delete" bindtap="deleteBill">删除记录</button>
+    </view>
+  </block>
+
+  <!-- ===== 编辑模式 ===== -->
+  <block wx:else>
+    <view class="edit-card">
+      <!-- 收支类型切换 -->
+      <view class="type-switch">
+        <view class="type-tab {{editType === 'expense' ? 'active-expense' : ''}}" bindtap="switchType" data-type="expense">支出</view>
+        <view class="type-tab {{editType === 'income' ? 'active-income' : ''}}" bindtap="switchType" data-type="income">收入</view>
+      </view>
+
+      <!-- 金额输入 -->
+      <view class="amount-row">
+        <text class="currency-sign {{editType === 'expense' ? 'text-danger' : 'text-success'}}">¥</text>
+        <input
+          class="amount-input {{editType === 'expense' ? 'text-danger' : 'text-success'}}"
+          type="digit"
+          placeholder="0.00"
+          value="{{editAmount}}"
+          bindinput="onAmountInput"
+          focus="{{true}}"
+          adjust-position="{{false}}"
+        />
+      </view>
+
+      <view class="divider"></view>
+
+      <!-- 分类选择 -->
+      <view class="form-row" bindtap="openCategoryModal">
+        <text class="row-label">分类</text>
+        <view class="row-value">
+          <text wx:for="{{categories}}" wx:key="id" wx:if="{{item.id === editCategoryId}}">{{item.icon}} {{item.name}}</text>
+          <text wx:if="{{!editCategoryId}}" class="placeholder">请选择分类</text>
+          <text class="arrow">›</text>
+        </view>
+      </view>
+
+      <!-- 子分类 -->
+      <view class="sub-cat-row" wx:if="{{subCategories.length > 0}}">
+        <scroll-view scroll-x class="sub-cat-scroll">
+          <view
+            class="sub-cat-chip {{item === editSubCategory ? 'sub-active' : ''}}"
+            wx:for="{{subCategories}}"
+            wx:key="*this"
+            bindtap="selectSubCategory"
+            data-sub="{{item}}"
+          >{{item}}</view>
+        </scroll-view>
+      </view>
+
+      <!-- 日期 -->
+      <view class="form-row">
+        <text class="row-label">日期</text>
+        <picker mode="date" value="{{editDate}}" bindchange="onDateChange">
+          <view class="row-value">
+            <text>{{editDate}}</text>
+            <text class="arrow">›</text>
+          </view>
+        </picker>
+      </view>
+
+      <!-- 备注 -->
+      <view class="form-row">
+        <text class="row-label">备注</text>
+        <input
+          class="note-input"
+          placeholder="添加备注（可选）"
+          value="{{editNote}}"
+          bindinput="onNoteInput"
+          maxlength="50"
+        />
+      </view>
+    </view>
+
+    <!-- 保存 / 取消 -->
+    <view class="btn-row">
+      <button class="btn-save" bindtap="saveEdit">保存修改</button>
+      <button class="btn-cancel" bindtap="toggleEdit">取消</button>
+    </view>
+  </block>
+
+  <!-- 分类选择弹窗 -->
+  <view class="cat-modal-mask" wx:if="{{showCategoryModal}}" bindtap="closeCategoryModal">
+    <view class="cat-modal" catchtap="">
+      <view class="cat-modal-title">选择分类</view>
+      <view class="cat-grid">
+        <view
+          class="cat-cell {{item.id === editCategoryId ? 'cat-selected' : ''}}"
+          wx:for="{{categories}}"
+          wx:key="id"
+          bindtap="selectCategory"
+          data-index="{{index}}"
+        >
+          <text class="cat-cell-icon">{{item.icon}}</text>
+          <text class="cat-cell-name">{{item.name}}</text>
+        </view>
+      </view>
+    </view>
+  </view>
+</view>
+<view class="loading-wrap" wx:if="{{loading}}">加载中...</view>

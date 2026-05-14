@@ -1,0 +1,76 @@
+<!-- pages/login/login.wxml -->
+<view class="container">
+  <!-- Logo区域 -->
+  <view class="hero">
+    <view class="logo-wrap">
+      <text class="logo-icon">📒</text>
+    </view>
+    <text class="app-name">家庭账本</text>
+    <text class="app-desc">多人共享，清晰记录每一笔</text>
+  </view>
+
+  <!-- 登录区域 -->
+  <view class="login-section">
+    <!-- 头像选择 -->
+    <button class="avatar-btn" open-type="chooseAvatar" bindchooseavatar="onChooseAvatar">
+      <image class="avatar-img" src="{{avatarUrl}}" mode="aspectFill" wx:if="{{avatarUrl}}"/>
+      <view class="avatar-placeholder" wx:else>👆 点击选择头像</view>
+    </button>
+
+    <!-- 微信昵称（自动获取，获取后不可编辑） -->
+    <view class="form-group">
+      <text class="form-label">微信昵称</text>
+      <view class="nickname-wrap">
+        <!-- 未获取时：显示可点击的 input，触发微信昵称弹窗 -->
+        <input
+          wx:if="{{!nickName}}"
+          type="nickname"
+          class="nickname-input"
+          placeholder="点击获取微信昵称"
+          value="{{nickName}}"
+          bindinput="onNickNameInput"
+        />
+        <!-- 已获取：只读展示（input 已被 wx:if 销毁，用户无法再编辑） -->
+        <view wx:if="{{nickName}}" class="nickname-readonly">
+          <text>{{nickName}}</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 自定义显示昵称（可选） -->
+    <view class="form-group">
+      <text class="form-label">显示昵称（可选）</text>
+      <input
+        class="form-input"
+        placeholder="不填则使用微信昵称"
+        value="{{displayName}}"
+        bindinput="onDisplayNameInput"
+        maxlength="12"
+      />
+      <text class="form-hint">用于在账本中显示，方便家人识别你</text>
+    </view>
+
+    <!-- 进入按钮 -->
+    <button class="btn-enter" bindtap="handleEnter" loading="{{loading}}">
+      进入家庭账本
+    </button>
+
+    <text class="tip">进入即表示同意用户协议与隐私政策</text>
+  </view>
+
+  <!-- 底部特性说明 -->
+  <view class="features">
+    <view class="feature-item">
+      <text class="feature-icon">👨‍👩‍👧‍👦</text>
+      <text class="feature-text">多人共享账本</text>
+    </view>
+    <view class="feature-item">
+      <text class="feature-icon">📷</text>
+      <text class="feature-text">拍照智能识别</text>
+    </view>
+    <view class="feature-item">
+      <text class="feature-icon">📊</text>
+      <text class="feature-text">图表统计分析</text>
+    </view>
+  </view>
+</view>
